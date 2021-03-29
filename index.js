@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 let phonebook = [
   {
     id: 1,
@@ -37,14 +39,29 @@ app.get('/api/persons/:id', (request, response) => {
   } else {
     response.status(404).end();
   }
-})
+});
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id);
   phonebook = phonebook.filter(person => person.id !== id);
 
   response.status(204).end();
-})
+});
+
+app.post('/api/persons', (request, response) => {
+  const person = request.body;
+  
+  const newPerson = {
+    //random integer range 0 - 100000
+    id: Math.floor(Math.random() * 100001),
+    name: person.name,
+    number: person.number
+  }
+
+  phonebook = [...phonebook, newPerson];
+
+  response.status(201).json(newPerson);
+});
 
 app.get('/info', (request, response) => {
   const dateNow = new Date();
