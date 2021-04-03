@@ -1,1 +1,1 @@
-GET http://localhost:3001/api/persons
+GET https://phonebook2021.herokuapp.com/api/persons
