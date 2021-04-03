@@ -98,8 +98,8 @@ app.get('/info', (request, response) => {
     `<p>Phonebook has info for ${phonebook.length} people</p>
     <p>${dateNow}</p>`);
 });
-
-const PORT = process.env.3001;
+process
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
