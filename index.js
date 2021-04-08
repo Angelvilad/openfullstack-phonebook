@@ -1,7 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
+const Person = require('./models/person.js');
+//Queda redefinir el metodo toJSON para obtener en el json de respuesta la propiedad id bien nombrada y eliminar la otra que no usamos, modularizar mongoose, poner la connectionString como una var de entorno con dotenv...etc.
 
 app.use(cors());
 app.use(express.json());
@@ -24,31 +27,11 @@ app.use(morgan(function (tokens, req, res) {
   ].join(' ');
 }));
 
-let phonebook = [
-  {
-    id: 1,
-    name: 'Arto Hellas',
-    number: '040-123456'
-  },
-  {
-    id: 2,
-    name: 'Ada Lovelace',
-    number: '39-44-5323523'
-  },
-  {
-    id: 3,
-    name: 'Dan Abramov',
-    number: '12-43-234345'
-  },
-  {
-    id: 4,
-    name: 'Mary Poppendick',
-    number: '39-23-6423122'
-  }
-];
-
 app.get('/api/persons', (request, response) => {
-  response.json(phonebook)
+  Person.find({})
+    .then(persons => {
+      response.json(persons);
+    })
 });
 
 app.get('/api/persons/:id', (request, response) => {
