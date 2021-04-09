@@ -53,26 +53,22 @@ app.delete('/api/persons/:id', (request, response) => {
 });
 
 app.post('/api/persons', (request, response) => {
-  const person = request.body;
+  const body = request.body;
 
-  if(!person || !person.name || !person.number) {
+  if(!body || !body.name || !body.number) {
     return response.status(400).json({error: 'name and number properties are required'});
   }
-
-  if(phonebook.some(item => item.name === person.name)) {
-    return response.status(400).json({error: 'name already exists'});
-  }
   
-  const newPerson = {
-    //random integer range 0 - 100000
-    id: Math.floor(Math.random() * 100001),
-    name: person.name,
-    number: person.number
-  };
+  const person = new Person({
+    name: body.name,
+    number: body.number
+  });
 
-  phonebook = [...phonebook, newPerson];
+  person.save()
+    .then(savedPerson => {
+      response.status(201).json(savedPerson);
+    });
 
-  response.status(201).json(newPerson);
 });
 
 app.get('/info', (request, response) => {
