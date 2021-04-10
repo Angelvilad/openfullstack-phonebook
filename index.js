@@ -45,11 +45,15 @@ app.get('/api/persons/:id', (request, response) => {
   }
 });
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id);
-  phonebook = phonebook.filter(person => person.id !== id);
+app.delete('/api/persons/:id', (request, response, next) => {
+  const {id} = request.params;
 
-  response.status(204).end();
+  Person.findByIdAndRemove(id)
+    .then(result => {
+      response.status(204).end();
+    })
+    .catch(err => next(err));
+  
 });
 
 app.post('/api/persons', (request, response) => {
