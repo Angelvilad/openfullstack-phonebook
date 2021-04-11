@@ -4,7 +4,7 @@ const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
 const Person = require('./models/person.js');
-//Queda redefinir el metodo toJSON para obtener en el json de respuesta la propiedad id bien nombrada y eliminar la otra que no usamos, modularizar mongoose, poner la connectionString como una var de entorno con dotenv...etc.
+const handleErrors = require('./middlewares/handleErrors.js');
 
 app.use(cors());
 app.use(express.json());
@@ -27,11 +27,12 @@ app.use(morgan(function (tokens, req, res) {
   ].join(' ');
 }));
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
   Person.find({})
     .then(persons => {
       response.json(persons);
     })
+    .catch(err => next(err));
 });
 
 app.get('/api/persons/:id', (request, response) => {
@@ -56,7 +57,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
   
 });
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body;
 
   if(!body || !body.name || !body.number) {
@@ -71,7 +72,8 @@ app.post('/api/persons', (request, response) => {
   person.save()
     .then(savedPerson => {
       response.status(201).json(savedPerson);
-    });
+    })
+    .catch(err => next(err));
 
 });
 
@@ -82,7 +84,9 @@ app.get('/info', (request, response) => {
     `<p>Phonebook has info for ${phonebook.length} people</p>
     <p>${dateNow}</p>`);
 });
-process
+
+app.use(handleErrors);
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
