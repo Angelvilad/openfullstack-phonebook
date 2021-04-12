@@ -74,7 +74,22 @@ app.post('/api/persons', (request, response, next) => {
       response.status(201).json(savedPerson);
     })
     .catch(err => next(err));
+});
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const id = request.params.id;
+  const body = request.body;
+
+  const personDataToUpdate = {
+    name: body.name,
+    number: body.number
+  };
+
+  Person.findByIdAndUpdate(id, personDataToUpdate, {new: true})
+    .then(result => {
+      response.status(200).json(result);
+    })
+    .catch(err => next(err));
 });
 
 app.get('/info', (request, response) => {

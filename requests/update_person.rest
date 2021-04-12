@@ -1,0 +1,7 @@
+PUT https://phonebook2021.herokuapp.com/api/persons/6070cb226c905569b8c8985e
+Content-Type: application/json
+
+{
+  "name": "tutu",
+  "number": "wewe"
+}
