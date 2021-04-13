@@ -35,15 +35,20 @@ app.get('/api/persons', (request, response, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id);
-  const person = phonebook.find(person => person.id === id);
-
-  if(person) {
-    response.json(person);
-  } else {
-    response.status(404).end();
-  }
+app.get('/api/persons/:id', (request, response, next) => {
+  const id = request.params.id;
+  
+  Person.findById(id)
+    .then(
+      person => {
+        if(person){
+          response.json(person);
+        } else {
+          response.status(404).end();
+        }
+      }
+    )
+    .catch(err => next(err));
 });
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -95,9 +100,12 @@ app.put('/api/persons/:id', (request, response, next) => {
 app.get('/info', (request, response) => {
   const dateNow = new Date();
 
-  response.send(
-    `<p>Phonebook has info for ${phonebook.length} people</p>
-    <p>${dateNow}</p>`);
+  Person.find({})
+    .then(people => {
+      response.send(
+        `<p>Phonebook has info for ${people.length} people</p>
+        <p>${dateNow}</p>`);
+    })
 });
 
 app.use(handleErrors);
