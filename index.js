@@ -1,3 +1,8 @@
+/* TODO mirar en el errorhandler de manejar errores de usuario como objectsid malformados,
+ error en las validaciones de los tipos de datos introducidos para los modelos*/
+ /* TODO se puede aplicar SOLID en el error handler para no hacer if? el Open/Close principle
+ /* TODO hacer ultimos ejercicios */
+
 require('dotenv').config();
 const express = require('express');
 const app = express();
