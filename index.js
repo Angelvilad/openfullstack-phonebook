@@ -1,8 +1,3 @@
-/* TODO mirar en el errorhandler de manejar errores de usuario como objectsid malformados,
- error en las validaciones de los tipos de datos introducidos para los modelos*/
- /* TODO se puede aplicar SOLID en el error handler para no hacer if? el Open/Close principle
- /* TODO hacer ultimos ejercicios */
-
 require('dotenv').config();
 const express = require('express');
 const app = express();
@@ -69,10 +64,6 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body;
-
-  if(!body || !body.name || !body.number) {
-    return response.status(400).json({error: 'name and number properties are required'});
-  }
   
   const person = new Person({
     name: body.name,
@@ -91,11 +82,10 @@ app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body;
 
   const personDataToUpdate = {
-    name: body.name,
     number: body.number
   };
 
-  Person.findByIdAndUpdate(id, personDataToUpdate, {new: true})
+  Person.findByIdAndUpdate(id, personDataToUpdate, {new: true, runValidators: true})
     .then(result => {
       response.status(200).json(result);
     })

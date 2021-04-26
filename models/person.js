@@ -17,8 +17,22 @@ mongoose.connect(connectionString, {
   });
 
 const personSchema = new mongoose.Schema({
-  name: { type: String, unique: true },
-  number: String
+  name: {
+    type: String,
+    unique: true,
+    minlength: 3,
+    required: true
+  },
+  number: {
+    type: String,
+    required: true,
+    validate: {
+      validator: numberValue => {
+        return /^\d{8,}$/g.test(numberValue);
+      },
+      message: props => `${props.value} is not a valid number! Only digits. Minimum eight digits.`
+    }
+  }  
 });
 
 personSchema.plugin(uniqueValidator);
